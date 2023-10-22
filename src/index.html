@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GET Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .data-container {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="data-container">
+    <h1>Dados Pessoais</h1>
+    <div id="dadosPessoaisContainer"></div>
+</div>
+
+<div class="data-container">
+    <h1>Experiências</h1>
+    <div id="experienciasContainer"></div>
+</div>
+
+<script>
+    function fetchData(url, callback) {
+        fetch(url)
+            .then(response => response.json())
+            .then(data => callback(data))
+            .catch(error => console.error('Error fetching data:', error));
+    }
+
+    function formatData(data) {
+        let formattedData = '';
+        data.forEach(item => {
+            for (const key in item) {
+                if (key !== 'dados_id' && key !== 'exp_id') {
+                    formattedData += `${item[key]}\n`;
+                }
+            }
+            formattedData += '\n';
+        });
+        return formattedData;
+    }
+
+    function displayData(data, containerId) {
+        const container = document.getElementById(containerId);
+        const formattedData = formatData(data);
+        container.innerText = formattedData;
+    }
+
+    fetchData('/dados_pessoais', data => displayData(data, 'dadosPessoaisContainer'));
+    fetchData('/experiencias', data => displayData(data, 'experienciasContainer'));
+</script>
+
+</body>
+</html>
